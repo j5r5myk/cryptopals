@@ -1,40 +1,17 @@
 package main
 
 import (
-  "bufio"
   "fmt"
-  "os"
 )
 
 func main() {
-
-  a := []int{1, 2, 3}
-  fmt.Printf("%v\n", a)
-
-  hex := readHexLine()
-  //b64 = hexToB64(hex)
-  //fmt.Print(b64)
-  fmt.Printf("%v %T\n", hex, hex);
+  readHexLine()
 }
 
-func readHexLine() []int {
-  reader := bufio.NewReader(os.Stdin)
-  fmt.Print("Enter hex: ")
-  text, _ := reader.ReadString('\n')
-  // test valid hex
-  /*
-  if !isHex(text) {
-    fmt.Println("Error input must be hexadecimal");
-    os.Exit(1);
-  }
-  */
-  // convert to int and store
-  hex := make([]int, len(text))
-  for i := range hex {
-    hex[i] = text[i] - 48
-  }
-  fmt.Printf("type: %T\n", text)
-  return hex
+func readHexLine() {
+  var i int
+  fmt.Scan(&i)
+  fmt.Printf("saw hex %x\n", i)
 }
 
 func isHex(hex string) bool {
