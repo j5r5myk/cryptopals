@@ -10,8 +10,9 @@ func main() {
 
 func readHexLine() {
   var i int
-  fmt.Scan(&i)
+  fmt.Scanf("%X", &i)
   fmt.Printf("saw hex %x\n", i)
+  fmt.Printf("saw dec %d\n", i)
 }
 
 func isHex(hex string) bool {
