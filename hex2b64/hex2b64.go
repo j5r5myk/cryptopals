@@ -4,7 +4,7 @@ import (
   "bufio"
   "fmt"
   "os"
-  "encoding/hex"
+  "strconv"
 )
 
 func main() {
@@ -19,14 +19,17 @@ func readHexLine() []int {
   reader := bufio.NewReader(os.Stdin)
   fmt.Print("Enter hex to convert: ")
   hexstr, _ := reader.ReadString('\n')
+  fmt.Println("Input: ", hexstr)
+  // remove newline
+  hexstr = hexstr[:len(hexstr)-1]
   // test valid hex
   //if !isEvenLen(hexstr) {
     //fmt.Println("Error: input must be even");
     //os.Exit(1)
   //}
-  ints, err := hex.DecodeString(hexstr[:len(hexstr)-1])
-  if err != nil {
-    panic(err)
+  ints := make([]int, len(hexstr))
+  for pos, char := range hexstr {
+    ints[pos] = int(char - '0')
   }
   return ints
 }
