@@ -33,6 +33,7 @@ func readHexLine() []int {
     if err != nil {
       fmt.Println(1, err)
     }
+    // Cast to int
     ints[pos] = int(i)
   }
   return ints
