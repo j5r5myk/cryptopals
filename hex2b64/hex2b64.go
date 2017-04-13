@@ -12,7 +12,6 @@ func main() {
  rawhex := readHexLine()
  fmt.Println(rawhex)
  printHexArray(rawhex)
- 
  fmt.Println(hex2b64(rawhex))
 }
 
@@ -57,12 +56,31 @@ func isHex(rawhex []byte) bool {
   }
   return true
 }
-
+/*
+A lil map
+Bytes:  11111111 22222222 3333333
+b64s:   11111122 22223333 33444444 
+*/
 func hex2b64(rawhex []byte) string {
-  // read 3 octets
-  // convert into 3 b64 chars
+  dict := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+  var b64 string
+  var b int
+  // process 3 bytes at a time
   for i := 0; i < len(rawhex); i+=3 {
-    //hex[i]+hex[i+1]+hex[i+2]
+    // first 6 bits
+    b = (int) rawhex[i] & 0xFC >> 2
+    b64 = b64 + dict[b]
+    // next 6
+    b = (int) rawhex[i] & 0x03 << 4
+    b = b | (rawhex[i+1] & 0xF0 >> 4)
+    b64 = b64 + dict[b]
+    // 6 more
+    b = (int) rawhex[i+1] & 0x0F << 2
+    b = b | rawhex[i+2] & 0xC0 >> 4
+    b64 = b64 + dict[b]
+    // last 6
+    b = (int) rawhex[i+2] & 0x3F
+    b64 = b64 + dict[b]
   }
-  return "bunk!"
+  return b64
 }
