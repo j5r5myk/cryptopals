@@ -14,21 +14,21 @@ func main() {
  //fmt.Println(hex2b64(ints))
 }
 
-func readHexLine() []byte {
+func readHexLine() []int {
   // Read line of text
   reader := bufio.NewReader(os.Stdin)
   fmt.Print("Enter hex to convert: ")
   hexstr, _ := reader.ReadString('\n')
   // test valid hex
-  if !isEvenLen(hexstr) {
-    fmt.Println("Error: input must be even");
-    os.Exit(1)
-  }
-  rawhex, err := hex.DecodeString(hexstr[:len(hexstr)-1])
+  //if !isEvenLen(hexstr) {
+    //fmt.Println("Error: input must be even");
+    //os.Exit(1)
+  //}
+  ints, err := hex.DecodeString(hexstr[:len(hexstr)-1])
   if err != nil {
     panic(err)
   }
-  return rawhex
+  return ints
 }
 
 /*
