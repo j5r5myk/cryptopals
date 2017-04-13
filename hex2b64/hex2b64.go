@@ -20,7 +20,7 @@ func readHexLine() []int {
   fmt.Print("Enter hex to convert: ")
   hexstr, _ := reader.ReadString('\n')
   fmt.Println("Input: ", hexstr)
-  // remove newline
+  // Remove newline
   hexstr = hexstr[:len(hexstr)-1]
   // test valid hex
   //if !isEvenLen(hexstr) {
@@ -29,7 +29,11 @@ func readHexLine() []int {
   //}
   ints := make([]int, len(hexstr))
   for pos, char := range hexstr {
-    ints[pos] = int(char - '0')
+    i, err := strconv.ParseInt(string(char), 16, 0)
+    if err != nil {
+      fmt.Println(1, err)
+    }
+    ints[pos] = int(i)
   }
   return ints
 }
