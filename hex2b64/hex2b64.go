@@ -9,17 +9,9 @@ import (
 
 func main() {
  // hexstr := "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
- rawhex := readHexLine()
- fmt.Println(rawhex)
- printHexArray(rawhex)
- fmt.Println(hex2b64(rawhex))
-}
-
-func printHexArray(a []byte) {
-  for i := 0; i < len(a); i++ {
-    fmt.Printf("%X", a[i])
-  }
-  fmt.Println()
+ ints := readHexLine()
+ fmt.Println(ints)
+ //fmt.Println(hex2b64(ints))
 }
 
 func readHexLine() []byte {
