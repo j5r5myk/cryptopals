@@ -44,18 +44,18 @@ func hex2b64(ints []int) string {
   for i := 0; i < len(ints); i+=3 {
     // first 6 bits
     b = ints[i] & 0xFC >> 2
-    b64 = b64 + dict[b]
+    b64 = b64 + string(dict[b])
     // next 6
     b = ints[i] & 0x03 << 4
     b = b | (ints[i+1] & 0xF0 >> 4)
-    b64 = b64 + dict[b]
+    b64 = b64 + string(dict[b])
     // 6 more
     b = ints[i+1] & 0x0F << 2
     b = b | ints[i+2] & 0xC0 >> 4
-    b64 = b64 + dict[b]
+    b64 = b64 + string(dict[b])
     // last 6
     b = ints[i+2] & 0x3F
-    b64 = b64 + dict[b]
+    b64 = b64 + string(dict[b])
   }
   return b64
 }
