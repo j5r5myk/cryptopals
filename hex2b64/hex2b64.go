@@ -5,12 +5,13 @@ import (
   "fmt"
   "os"
   "strconv"
+  "encoding/hex"
 )
 
 func main() {
  // hexstr := "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
  ints := readHexLine()
- fmt.Println(ints)
+ fmt.Printf("%s", hex.Dump(ints))
  fmt.Println(hex2b64(ints))
 }
 
@@ -33,7 +34,7 @@ func readHexLine() []byte {
       // Create the byte
       // TODO prevent out of bounds
       b := (byte(hibits) << 4) | byte(lowbits)
-      fmt.Printf("%b\n", b)
+      //fmt.Printf("%b\n", b)
       if i == 0 {
         ints[i] = b
       } else {
@@ -56,20 +57,20 @@ func hex2b64(bytes []byte) string {
   for i := 0; i < len(bytes); i+=3 {
     // first 6 bits
     b = bytes[i] & 0xFC >> 2
-    fmt.Printf("Byte %d: %b\n", i, bytes[i])
     b64 = b64 + string(dict[b])
     // next 6
     b = bytes[i] & 0x03 << 4
     if i + 1 < len(bytes) {
       b = b | (bytes[i+1] & 0xF0 >> 4)
-      fmt.Printf("Byte %d: %b\n", i+1, bytes[i+1])
       b64 = b64 + string(dict[b])
       // 6 more
       b = bytes[i+1] & 0x0F << 2
       if i + 2 < len(bytes) {
         b = b | bytes[i+2] & 0xC0 >> 4
+        b64 = b64 + string(dict[b])
         // last 6
         b = bytes[i+2] & 0x3F
+        b64 = b64 + string(dict[b])
       } else {
         b64 = b64 + "="
       }
