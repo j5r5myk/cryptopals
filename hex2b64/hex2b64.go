@@ -11,7 +11,7 @@ func main() {
  // hexstr := "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
  ints := readHexLine()
  fmt.Println(ints)
- //fmt.Println(hex2b64(ints))
+ fmt.Println(hex2b64(ints))
 }
 
 func readHexLine() []int {
@@ -55,15 +55,23 @@ func hex2b64(ints []int) string {
     b64 = b64 + string(dict[b])
     // next 6
     b = ints[i] & 0x03 << 4
-    b = b | (ints[i+1] & 0xF0 >> 4)
-    b64 = b64 + string(dict[b])
-    // 6 more
-    b = ints[i+1] & 0x0F << 2
-    b = b | ints[i+2] & 0xC0 >> 4
-    b64 = b64 + string(dict[b])
-    // last 6
-    b = ints[i+2] & 0x3F
-    b64 = b64 + string(dict[b])
+    if i + 1 < len(ints) {
+      b = b | (ints[i+1] & 0xF0 >> 4)
+      b64 = b64 + string(dict[b])
+      // 6 more
+      b = ints[i+1] & 0x0F << 2
+      if i + 2 < len(ints) {
+        b = b | ints[i+2] & 0xC0 >> 4
+        b64 = b64 + string(dict[b])
+        // last 6
+        b = ints[i+2] & 0x3F
+        b64 = b64 + string(dict[b])
+      } else {
+        b64 = b64 + "="
+      }
+    } else {
+      b64 = b64 + "=="
+    }
   }
   return b64
 }
