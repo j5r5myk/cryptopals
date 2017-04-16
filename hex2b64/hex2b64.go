@@ -48,28 +48,28 @@ A lil map
 Bytes:  11111111 22222222 3333333
 b64s:   11111122 22223333 33444444 
 */
-func hex2b64(ints []byte) string {
+func hex2b64(bytes []byte) string {
   dict := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
   var b64 string
   var b byte
   // process 3 bytes at a time
-  for i := 0; i < len(ints); i+=3 {
+  for i := 0; i < len(bytes); i+=3 {
     // first 6 bits
-    b = ints[i] & 0xFC >> 2
-    fmt.Printf("Byte %d: %b\n", i, ints[i])
+    b = bytes[i] & 0xFC >> 2
+    fmt.Printf("Byte %d: %b\n", i, bytes[i])
     b64 = b64 + string(dict[b])
     // next 6
-    b = ints[i] & 0x03 << 4
-    if i + 1 < len(ints) {
-      b = b | (ints[i+1] & 0xF0 >> 4)
-      fmt.Printf("Byte %d: %b\n", i+1, ints[i+1])
+    b = bytes[i] & 0x03 << 4
+    if i + 1 < len(bytes) {
+      b = b | (bytes[i+1] & 0xF0 >> 4)
+      fmt.Printf("Byte %d: %b\n", i+1, bytes[i+1])
       b64 = b64 + string(dict[b])
       // 6 more
-      b = ints[i+1] & 0x0F << 2
-      if i + 2 < len(ints) {
-        b = b | ints[i+2] & 0xC0 >> 4
+      b = bytes[i+1] & 0x0F << 2
+      if i + 2 < len(bytes) {
+        b = b | bytes[i+2] & 0xC0 >> 4
         // last 6
-        b = ints[i+2] & 0x3F
+        b = bytes[i+2] & 0x3F
       } else {
         b64 = b64 + "="
       }
