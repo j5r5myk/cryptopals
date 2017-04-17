@@ -24,23 +24,21 @@ func readHexLine() []byte {
   // Remove newline
   hexstr = hexstr[:len(hexstr)-1]
   // TODO: test valid hex
-    ints := make([]byte, len(hexstr) / 2)
-    for i := 0; i < len(hexstr) / 2; i+=2 {
-      hibits, err := strconv.ParseInt(string(hexstr[i]), 16, 0)
-      lowbits, err := strconv.ParseInt(string(hexstr[i+1]), 16, 0)
-      if err != nil {
-        fmt.Println(1, err)
-      }
-      // Create the byte
-      // TODO prevent out of bounds
-      b := (byte(hibits) << 4) | byte(lowbits)
-      //fmt.Printf("%b\n", b)
-      if i == 0 {
-        ints[i] = b
-      } else {
-        ints[i-1] = b
-      }
+  ints := make([]byte, len(hexstr) / 2)
+  j := 0
+  for i := 0; i < len(hexstr); i+=2 {
+    hibits, err := strconv.ParseInt(string(hexstr[i]), 16, 0)
+    lowbits, err := strconv.ParseInt(string(hexstr[i+1]), 16, 0)
+    if err != nil {
+      fmt.Println(1, err)
     }
+    // Create the byte
+    // TODO prevent out of bounds
+    b := (byte(hibits) << 4) | byte(lowbits)
+    //fmt.Printf("%b\n", b)
+    ints[j] = b
+    j++
+  }
   return ints
 }
 
