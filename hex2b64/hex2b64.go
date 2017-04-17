@@ -1,37 +1,83 @@
 package main
 
 import (
+  "bufio"
   "fmt"
+  "os"
+  "strconv"
+  "encoding/hex"
 )
 
 func main() {
-  readHexLine()
+ // hexstr := "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+ ints := readHexLine()
+ fmt.Printf("%s", hex.Dump(ints))
+ fmt.Println(hex2b64(ints))
 }
 
-func readHexLine() {
-  var i int
-  fmt.Scanf("%X", &i)
-  fmt.Printf("saw hex %x\n", i)
-  fmt.Printf("saw dec %d\n", i)
-}
-
-func isHex(hex string) bool {
-  fmt.Println("string length: ", len(hex))
-  for i := 0; i < len(hex) - 1; i++ {
-    if (hex[i] < '0' || hex[i] > '9') {
-      return false
+func readHexLine() []byte {
+  // Read line of text
+  reader := bufio.NewReader(os.Stdin)
+  fmt.Print("Enter hex to convert: ")
+  hexstr, _ := reader.ReadString('\n')
+  fmt.Println("Input: ", hexstr)
+  // Remove newline
+  hexstr = hexstr[:len(hexstr)-1]
+  // TODO: test valid hex
+  ints := make([]byte, len(hexstr) / 2)
+  j := 0
+  for i := 0; i < len(hexstr); i+=2 {
+    hibits, err := strconv.ParseInt(string(hexstr[i]), 16, 0)
+    lowbits, err := strconv.ParseInt(string(hexstr[i+1]), 16, 0)
+    if err != nil {
+      fmt.Println(1, err)
     }
-    if (hex[i] < 'a' || hex[i] > 'f') {
-      return false
+    // Create the byte
+    // TODO prevent out of bounds
+    b := (byte(hibits) << 4) | byte(lowbits)
+    //fmt.Printf("%b\n", b)
+    ints[j] = b
+    j++
+  }
+  return ints
+}
+
+/*
+A lil map
+Bytes:  11111111 22222222 33333333
+b64s:   11111122 22223333 33444444 
+*/
+func hex2b64(bytes []byte) string {
+  dict := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+  var b64 string
+  var b byte
+  // process 3 bytes at a time
+  for i := 0; i < len(bytes); i+=3 {
+    // first 6 bits
+    b = bytes[i] & 0xFC >> 2
+    b64 = b64 + string(dict[b])
+    // next 6
+    b = bytes[i] & 0x03 << 4
+    if i + 1 < len(bytes) {
+      b = b | (bytes[i+1] & 0xF0 >> 4)
+      b64 = b64 + string(dict[b])
+      // 6 more
+      b = bytes[i+1] & 0x0F << 2
+      if i + 2 < len(bytes) {
+        b = b | bytes[i+2] & 0xC0 >> 6
+        b64 = b64 + string(dict[b])
+        // last 6
+        b = bytes[i+2] & 0x3F
+        b64 = b64 + string(dict[b])
+      } else {
+        b64 = b64 + string(dict[b])
+        b64 = b64 + "="
+      }
+    } else {
+      b64 = b64 + string(dict[b])
+      b64 = b64 + "=="
     }
   }
-  return true
-}
-
-func hexToB64(hex string) {
-  // read 3 octets
-  // convert into 3 b64 chars
-  for i := 0; i < len(hex); i+=3 {
-    //hex[i]+hex[i+1]+hex[i+2]
-  }
+  println()
+  return b64
 }
