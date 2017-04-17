@@ -44,7 +44,7 @@ func readHexLine() []byte {
 
 /*
 A lil map
-Bytes:  11111111 22222222 3333333
+Bytes:  11111111 22222222 33333333
 b64s:   11111122 22223333 33444444 
 */
 func hex2b64(bytes []byte) string {
@@ -64,15 +64,17 @@ func hex2b64(bytes []byte) string {
       // 6 more
       b = bytes[i+1] & 0x0F << 2
       if i + 2 < len(bytes) {
-        b = b | bytes[i+2] & 0xC0 >> 4
+        b = b | bytes[i+2] & 0xC0 >> 6
         b64 = b64 + string(dict[b])
         // last 6
         b = bytes[i+2] & 0x3F
         b64 = b64 + string(dict[b])
       } else {
+        b64 = b64 + string(dict[b])
         b64 = b64 + "="
       }
     } else {
+      b64 = b64 + string(dict[b])
       b64 = b64 + "=="
     }
   }
