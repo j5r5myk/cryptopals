@@ -9,14 +9,14 @@ import (
 func main() {
   input := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
   letters := "etaoinsrhdlucmfywgpbvkxqjz"
-  chars := "abcdefghijklmnopqrstuvqxyz`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"
+  //chars := "abcdefghijklmnopqrstuvqxyz`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"
   // Arbitrary large value
   lowscore := 100000
   var score int
   lowholder := make([]byte, len(input) / 2)
   // Create hashmap
   freq := make(map[byte]int)
-  for pos, char := range chars {
+  for pos, char := range letters {
     freq[byte(char)] = pos
   }
   bytes := parseHexString(input)
@@ -30,7 +30,7 @@ func main() {
       copy(lowholder, decoded)
     }
   }
-  fmt.Printf("Winner:\n%s", hex.Dump(lowholder))
+  fmt.Printf("Winner:\nScore: %d\n%s", lowscore, hex.Dump(lowholder))
 }
 func parseHexString(s string) []byte {
   output := make([]byte, len(s) / 2)
