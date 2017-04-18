@@ -8,11 +8,7 @@ import (
 
 func main() {
   input := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-  //input := "00000000000000000000000000000000000000000000000000000000000000000000"
-  //letters := "etaoinsrhdlucmfywgpbvkxqjz"
   reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
-  //keyChars := "abcdefghijklmnopqrstuvqxyz`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"
-  // Arbitrary large value
   hiscore := 0
   hichar := ""
   var score int
@@ -24,9 +20,9 @@ func main() {
   }
   bytes := parseHexString(input)
   for i := 0; i < 128; i++ {
+    // Decode using the given byte and calculate frequency score
     decoded := decode(byte(i), bytes)
     score = calcScore(decoded, freq)
-    //fmt.Printf("Char: %s, Score: %d\n%s", string(i), score, hex.Dump(decoded))
     // Greedily compare to previous attempts
     if score > hiscore {
       hiscore = score
