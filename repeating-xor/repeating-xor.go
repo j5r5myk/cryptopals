@@ -18,18 +18,17 @@ func main() {
   var buffer bytes.Buffer
   for scanner.Scan() {
     //fmt.Println(scanner.Text())
-    buffer.WriteString(scanner.Text())
+    buffer.WriteString(scanner.Text() + "\n")
   }
-  // Test
-  fmt.Println(buffer.String())
   // Perform repeating xor
   output := repeatXor(buffer.String(), key)
   // Print result
   fmt.Printf("%s", hex.Dump(output))
 }
 func repeatXor(s string, key string) []byte {
-  output := make([]byte, len(s))
-  for i := 0; i < len(s); i++ {
+  output := make([]byte, len(s) - 1)
+  // Skip final newline
+  for i := 0; i < len(s) - 1; i++ {
     output[i] = s[i] ^ key[i%len(key)]
   }
   return output
