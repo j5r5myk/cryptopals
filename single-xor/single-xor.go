@@ -34,7 +34,7 @@ func main() {
 func parseHexString(s string) []byte {
   output := make([]byte, len(s) / 2)
   j := 0
-  for i := 0; i < len(s); i++ {
+  for i := 0; i < len(s); i+=2 {
     hibits, err := strconv.ParseInt(string(s[i]), 16, 0)
     lowbits, err := strconv.ParseInt(string(s[i+1]), 16, 0)
     if err != nil {
@@ -42,6 +42,7 @@ func parseHexString(s string) []byte {
     }
     b := (byte(hibits) << 4 | byte(lowbits))
     output[j] = b
+    j++
   }
   return output
 }
