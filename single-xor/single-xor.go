@@ -8,11 +8,13 @@ import (
 
 func main() {
   input := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+  //input := "00000000000000000000000000000000000000000000000000000000000000000000"
   //letters := "etaoinsrhdlucmfywgpbvkxqjz"
   reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
-  chars := "abcdefghijklmnopqrstuvqxyz`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"
+  //keyChars := "abcdefghijklmnopqrstuvqxyz`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"
   // Arbitrary large value
   hiscore := 0
+  hichar := ""
   var score int
   hiholder := make([]byte, len(input) / 2)
   // Create hashmap
@@ -21,17 +23,18 @@ func main() {
     freq[byte(char)] = pos
   }
   bytes := parseHexString(input)
-  for _, char := range chars {
-    decoded := decode(byte(char), bytes)
+  for i := 0; i < 128; i++ {
+    decoded := decode(byte(i), bytes)
     score = calcScore(decoded, freq)
-    //fmt.Printf("Char: %r, Score: %d\n%s", char, score, hex.Dump(decoded))
+    //fmt.Printf("Char: %s, Score: %d\n%s", string(i), score, hex.Dump(decoded))
     // Greedily compare to previous attempts
     if score > hiscore {
       hiscore = score
+      hichar = string(i)
       copy(hiholder, decoded)
     }
   }
-  fmt.Printf("Winner:\nScore: %d\n%s", hiscore, hex.Dump(hiholder))
+  fmt.Printf("Winner:\nChar: %s Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
 }
 func parseHexString(s string) []byte {
   output := make([]byte, len(s) / 2)
