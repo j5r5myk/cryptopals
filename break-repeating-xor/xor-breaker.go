@@ -10,23 +10,28 @@ func main() {
   MAX_KEYSIZE := 40
   str1 := "this is a test"
   str2 := "wokka wokka!!!"
-  // read input
+  // Read input
   // Find key size
-  keySize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE)
+  keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
   // Divide input into keySized blocks
+  blocks := createBlocks(input, keysize)
+  print(blocks)
 }
-func findKeySize(min int, max int input string) int {
+func findKeySize(min int, max int, input string) int {
   lowHam := 1000
+  bestSize := 0
+  // TODO check min/max vs input length
   for i := min; i <= max; i++ {
     // Hamming distance b/w first 2 chunks
-    rawHam := calcHamming(input[0:keysize], input[keysize, 2 * keysize])
+    rawHam := calcHamming(input[0:i - 1], input[i: (2 * i) - 1])
     // Normalize and compare
-    normHam := rawHam / keySize
+    normHam := rawHam / i
     if normHam < lowHam {
       lowHam = normHam
+      bestSize = i
     }
   }
-  return lowHam
+  return bestsize
 }
 func calcHamming(str1 string, str2 string) int {
   result := make([]byte, len(str1))
@@ -42,11 +47,16 @@ func calcHamming(str1 string, str2 string) int {
   }
   return hamming
 }
-func createBlocks(s string, keySize int) {
+func createBlocks(s cipher, keysize int) []string{
   // Array, each element is keySize # bytes
   // len(s) / keysize elements
   // I guess it will be an array of strings
-  blocks
+  blocks := make([]string, len(s) / keysize)
+  for i := 0; i < len(blocks); i++ {
+    // ith keysize block
+    blocks[i] = cipher[i:((i + 1) * keysize) - 1]
+  }
+  return blocks
 }
 func transposeBlocks() {
 
