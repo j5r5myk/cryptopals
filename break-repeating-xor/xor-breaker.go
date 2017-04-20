@@ -14,7 +14,6 @@ func main() {
   // Find key size
   keySize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE)
   // Divide input into keySized blocks
-  
 }
 func findKeySize(min int, max int input string) int {
   lowHam := 1000
@@ -42,4 +41,13 @@ func calcHamming(str1 string, str2 string) int {
     }
   }
   return hamming
+}
+func createBlocks(s string, keySize int) {
+  // Array, each element is keySize # bytes
+  // len(s) / keysize elements
+  // I guess it will be an array of strings
+  blocks
+}
+func transposeBlocks() {
+
 }
