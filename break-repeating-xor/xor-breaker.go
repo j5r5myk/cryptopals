@@ -8,22 +8,31 @@ import (
 func main() {
   MIN_KEYSIZE := 2
   MAX_KEYSIZE := 40
-  str1 := "this is a test"
-  str2 := "wokka wokka!!!"
+  //str1 := "this is a test"
+  //str2 := "wokka wokka!!!"
   // Read input
+  input := "THISISATEST"
   // Find key size
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
+  fmt.Printf("Likely key size: %d\n", keysize)
   // Divide input into keySized blocks
   blocks := createBlocks(input, keysize)
-  print(blocks)
+  // Print blocks
+  for pos, block := range blocks {
+    fmt.Printf("%d: %s\n", pos, block)
+  }
 }
-func findKeySize(min int, max int, input string) int {
+func findKeySize(min int, max int, c string) int {
   lowHam := 1000
   bestSize := 0
-  // TODO check min/max vs input length
+  // Check max vs input length
+  if max > len(c) / 2 {
+    max = len(c) / 2
+  }
   for i := min; i <= max; i++ {
+    fmt.Println("Testing keysize: ", i)
     // Hamming distance b/w first 2 chunks
-    rawHam := calcHamming(input[0:i - 1], input[i: (2 * i) - 1])
+    rawHam := calcHamming(c[0:i], c[i:2 * i])
     // Normalize and compare
     normHam := rawHam / i
     if normHam < lowHam {
@@ -31,7 +40,7 @@ func findKeySize(min int, max int, input string) int {
       bestSize = i
     }
   }
-  return bestsize
+  return bestSize
 }
 func calcHamming(str1 string, str2 string) int {
   result := make([]byte, len(str1))
@@ -47,17 +56,18 @@ func calcHamming(str1 string, str2 string) int {
   }
   return hamming
 }
-func createBlocks(s cipher, keysize int) []string{
+func createBlocks(c string, keysize int) []string{
   // Array, each element is keySize # bytes
   // len(s) / keysize elements
   // I guess it will be an array of strings
-  blocks := make([]string, len(s) / keysize)
+  blocks := make([]string, len(c) / keysize)
   for i := 0; i < len(blocks); i++ {
     // ith keysize block
-    blocks[i] = cipher[i:((i + 1) * keysize) - 1]
+    fmt.Printf("[%d...%d)\n", i*keysize, (i+1)*keysize)
+    blocks[i] = c[i * keysize:((i + 1) * keysize)]
   }
+  // TODO Check and add remainder
   return blocks
 }
 func transposeBlocks() {
-
 }
