@@ -17,6 +17,7 @@ func main() {
   fmt.Printf("Likely key size: %d\n", keysize)
   // Divide input into keySized blocks
   blocks := createBlocks(input, keysize)
+  tb := transposeBlocks(blocks)
   // Print blocks
   for pos, block := range blocks {
     fmt.Printf("%d: %s\n", pos, block)
@@ -57,9 +58,8 @@ func calcHamming(str1 string, str2 string) int {
   return hamming
 }
 func createBlocks(c string, keysize int) []string{
-  // Array, each element is keySize # bytes
-  // ~len(s) / keysize elements
-  // +1 for remainder
+  // Each array element is keySize # bytes
+  // len(s) / keysize + 1 elements for remainder
   blocks := make([]string, (len(c) / keysize) + 1)
   for i := 0; i < len(blocks) - 1; i++ {
     // ith keysize block
@@ -71,5 +71,15 @@ func createBlocks(c string, keysize int) []string{
   blocks[len(blocks) - 1] = c
   return blocks
 }
-func transposeBlocks() {
+func transposeBlocks(blocks []string, keysize int) []string {
+  tb := make([]string, keysize)
+  for i := 0; i < len(keysize); i++ {
+    // something with modulo?
+    for j := 0; j < len(blocks); j+=keysize {
+      if i % keysize == j {
+        append(tb[i], blocks[j]
+      }
+    }
+  }
+  return tb
 }
