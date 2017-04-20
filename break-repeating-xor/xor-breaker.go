@@ -58,15 +58,17 @@ func calcHamming(str1 string, str2 string) int {
 }
 func createBlocks(c string, keysize int) []string{
   // Array, each element is keySize # bytes
-  // len(s) / keysize elements
-  // I guess it will be an array of strings
-  blocks := make([]string, len(c) / keysize)
-  for i := 0; i < len(blocks); i++ {
+  // ~len(s) / keysize elements
+  // +1 for remainder
+  blocks := make([]string, (len(c) / keysize) + 1)
+  for i := 0; i < len(blocks) - 1; i++ {
     // ith keysize block
-    fmt.Printf("[%d...%d)\n", i*keysize, (i+1)*keysize)
-    blocks[i] = c[i * keysize:((i + 1) * keysize)]
+    blocks[i] = c[0:keysize]
+    // Remove that slice
+    c = c[keysize:]
   }
-  // TODO Check and add remainder
+  // Add remainder
+  blocks[len(blocks) - 1] = c
   return blocks
 }
 func transposeBlocks() {
