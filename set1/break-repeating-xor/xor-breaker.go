@@ -17,7 +17,7 @@ func main() {
   fmt.Printf("Likely key size: %d\n", keysize)
   // Divide input into keySized blocks
   blocks := createBlocks(input, keysize)
-  tb := transposeBlocks(blocks)
+  tb := transposeBlocks(blocks, keysize)
   // Print blocks
   for pos, block := range blocks {
     fmt.Printf("%d: %s\n", pos, block)
@@ -73,11 +73,11 @@ func createBlocks(c string, keysize int) []string{
 }
 func transposeBlocks(blocks []string, keysize int) []string {
   tb := make([]string, keysize)
-  for i := 0; i < len(keysize); i++ {
+  for i := 0; i < keysize; i++ {
     // something with modulo?
     for j := 0; j < len(blocks); j+=keysize {
       if i % keysize == j {
-        append(tb[i], blocks[j]
+        append(tb[i], blocks[j])
       }
     }
   }
