@@ -19,8 +19,13 @@ func main() {
   blocks := createBlocks(input, keysize)
   tb := transposeBlocks(blocks, keysize)
   // Print blocks
+  println("Blocks:")
   for pos, block := range blocks {
     fmt.Printf("%d: %s\n", pos, block)
+  }
+  println("Transposed:")
+  for pos, tblock := range tb {
+    fmt.Printf("%d: %s\n", pos, tblock)
   }
 }
 func findKeySize(min int, max int, c string) int {
@@ -58,13 +63,13 @@ func calcHamming(str1 string, str2 string) int {
   return hamming
 }
 func createBlocks(c string, keysize int) []string{
-  // Each array element is keySize # bytes
+  // Each array element is keysize # bytes
   // len(s) / keysize + 1 elements for remainder
   blocks := make([]string, (len(c) / keysize) + 1)
   for i := 0; i < len(blocks) - 1; i++ {
     // ith keysize block
     blocks[i] = c[0:keysize]
-    // Remove that slice
+    // Remove processed slice
     c = c[keysize:]
   }
   // Add remainder
@@ -73,12 +78,10 @@ func createBlocks(c string, keysize int) []string{
 }
 func transposeBlocks(blocks []string, keysize int) []string {
   tb := make([]string, keysize)
-  for i := 0; i < keysize; i++ {
-    // something with modulo?
-    for j := 0; j < len(blocks); j+=keysize {
-      if i % keysize == j {
-        append(tb[i], blocks[j])
-      }
+  for i := 0; i < len(blocks); i++ {
+    for j := 0; j < len(blocks[i]); j++ {
+      //fmt.Printf("[%d][%d]\n",i, j)
+      tb[j] += string(blocks[i][j])
     }
   }
   return tb
