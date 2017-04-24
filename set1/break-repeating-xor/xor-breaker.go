@@ -2,7 +2,8 @@ package main
 
 import (
   "fmt"
-  //"encoding/hex"
+  "encoding/hex"
+  "b64"
 )
 
 func main() {
@@ -10,8 +11,12 @@ func main() {
   MAX_KEYSIZE := 40
   //str1 := "this is a test"
   //str2 := "wokka wokka!!!"
+  
   // Read input
-  input := "THISISATEST"
+  // convert from b64
+  // run this:
+
+  //input := "THISISATEST"
   // Find key size
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
   fmt.Printf("Likely key size: %d\n", keysize)
@@ -27,6 +32,12 @@ func main() {
   for pos, tblock := range tb {
     fmt.Printf("%d: %s\n", pos, tblock)
   }
+  key := ""
+  // Single XOR tranposed blocks
+  for i := 0; i < keysize; i++ {
+    key += singleXOR(tb[i])
+  }
+  fmt.Printf("key: %s\n", key)
 }
 func findKeySize(min int, max int, c string) int {
   lowHam := 1000
@@ -85,4 +96,43 @@ func transposeBlocks(blocks []string, keysize int) []string {
     }
   }
   return tb
+}
+func singleXOR(input string) string {
+  reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
+  hiscore := 0
+  hichar := ""
+  var score int
+  hiholder := make([]byte, len(input) / 2)
+  // Create hashmap
+  freq := make(map[byte]int)
+  for pos, char := range reverseLetters {
+    freq[byte(char)] = pos
+  }
+  for i := 0; i < 128; i++ {
+    // Decode using the given byte and calculate frequency score
+    decoded := decode(byte(i), input)
+    score = calcScore(decoded, freq)
+    // Greedily compare to previous attempts
+    if score > hiscore {
+      hiscore = score
+      hichar = string(i)
+      copy(hiholder, decoded)
+    }
+  }
+  fmt.Printf("Winner:\nChar: %s Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
+  return hichar
+}
+func decode(b byte, input string) []byte {
+  result := make([]byte, len(input))
+  for i := 0; i < len(input); i++ {
+     result[i] = input[i] ^ b
+  }
+  return result
+}
+func calcScore(s []byte, freq map[byte]int) int {
+  score := 0
+  for _, char := range s {
+    score += freq[char]
+  }
+  return score
 }
