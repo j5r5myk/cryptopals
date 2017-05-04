@@ -3,19 +3,14 @@ package main
 import (
   "fmt"
   "encoding/hex"
-  "encoding/base64"
+  //"encoding/base64"
 )
 
 func main() {
   MIN_KEYSIZE := 2
   MAX_KEYSIZE := 40
-  //str1 := "this is a test"
-  //str2 := "wokka wokka!!!"
-  
   // Read input
   // convert from b64
-  // run this:
-
   input := []byte("ae00ff1235889901fee1")
   // Find key size
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
@@ -35,9 +30,10 @@ func main() {
   key := ""
   // Single XOR tranposed blocks
   for i := 0; i < keysize; i++ {
-    key += singleXOR([]byte(tb[i]))
+    key += string(singleXOR([]byte(tb[i])))
   }
-  fmt.Printf("key: %s\n", key)
+  // Print likely key
+  fmt.Printf("key: %v\n", []byte(key))
 }
 func findKeySize(min int, max int, c []byte) int {
   lowHam := 1000
@@ -97,10 +93,10 @@ func transposeBlocks(blocks [][]byte, keysize int) []string {
   }
   return tb
 }
-func singleXOR(input []byte) string {
+func singleXOR(input []byte) int {
   reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
   hiscore := 0
-  hichar := ""
+  hichar := 0
   var score int
   hiholder := make([]byte, len(input) / 2)
   // Create hashmap
@@ -115,11 +111,11 @@ func singleXOR(input []byte) string {
     // Greedily compare to previous attempts
     if score > hiscore {
       hiscore = score
-      hichar = string(i)
+      hichar = i
       copy(hiholder, decoded)
     }
   }
-  fmt.Printf("Winner:\nChar: %s Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
+  fmt.Printf("Winner:\nChar: %d Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
   return hichar
 }
 func decode(b byte, input []byte) []byte {
