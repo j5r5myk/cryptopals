@@ -3,7 +3,7 @@ package main
 import (
   "fmt"
   "encoding/hex"
-  "b64"
+  "encoding/base64"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
   // convert from b64
   // run this:
 
-  //input := "THISISATEST"
+  input := []byte("ae00ff1235889901fee1")
   // Find key size
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
   fmt.Printf("Likely key size: %d\n", keysize)
@@ -35,11 +35,11 @@ func main() {
   key := ""
   // Single XOR tranposed blocks
   for i := 0; i < keysize; i++ {
-    key += singleXOR(tb[i])
+    key += singleXOR([]byte(tb[i]))
   }
   fmt.Printf("key: %s\n", key)
 }
-func findKeySize(min int, max int, c string) int {
+func findKeySize(min int, max int, c []byte) int {
   lowHam := 1000
   bestSize := 0
   // Check max vs input length
@@ -59,7 +59,7 @@ func findKeySize(min int, max int, c string) int {
   }
   return bestSize
 }
-func calcHamming(str1 string, str2 string) int {
+func calcHamming(str1 []byte, str2 []byte) int {
   result := make([]byte, len(str1))
   hamming := 0
   // XOR each byte
@@ -73,10 +73,10 @@ func calcHamming(str1 string, str2 string) int {
   }
   return hamming
 }
-func createBlocks(c string, keysize int) []string{
+func createBlocks(c []byte, keysize int) [][]byte{
   // Each array element is keysize # bytes
   // len(s) / keysize + 1 elements for remainder
-  blocks := make([]string, (len(c) / keysize) + 1)
+  blocks := make([][]byte, (len(c) / keysize) + 1)
   for i := 0; i < len(blocks) - 1; i++ {
     // ith keysize block
     blocks[i] = c[0:keysize]
@@ -87,7 +87,7 @@ func createBlocks(c string, keysize int) []string{
   blocks[len(blocks) - 1] = c
   return blocks
 }
-func transposeBlocks(blocks []string, keysize int) []string {
+func transposeBlocks(blocks [][]byte, keysize int) []string {
   tb := make([]string, keysize)
   for i := 0; i < len(blocks); i++ {
     for j := 0; j < len(blocks[i]); j++ {
@@ -97,7 +97,7 @@ func transposeBlocks(blocks []string, keysize int) []string {
   }
   return tb
 }
-func singleXOR(input string) string {
+func singleXOR(input []byte) string {
   reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
   hiscore := 0
   hichar := ""
@@ -122,7 +122,7 @@ func singleXOR(input string) string {
   fmt.Printf("Winner:\nChar: %s Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
   return hichar
 }
-func decode(b byte, input string) []byte {
+func decode(b byte, input []byte) []byte {
   result := make([]byte, len(input))
   for i := 0; i < len(input); i++ {
      result[i] = input[i] ^ b
