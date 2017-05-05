@@ -3,15 +3,35 @@ package main
 import (
   "fmt"
   "encoding/hex"
-  //"encoding/base64"
+  "os"
+  "bufio"
+  "encoding/base64"
 )
 
 func main() {
   MIN_KEYSIZE := 2
   MAX_KEYSIZE := 40
-  // Read 1 line of input
+  // Open file
+  file, err := os.Open("6.txt")
+  if err != nil {
+    os.Exit(1)
+  }
+  // Read 1 line for keysize calculations
+  defer file.Close()
+  scanner := bufio.NewScanner(file)
+  scanner.Scan()
+  line := scanner.Text()
+  fmt.Println(line)
   // Convert from b64
-  input := []byte("ae00ff1235889901fee11247981275981725987febc7ca7a7c7a8c79a87ca8fe8b9c0a7e635a412")
+  //input := []byte("ae00ff1235889901fee11247981275981725987febc7ca7a7c7a8c79a87ca8fe8b9c0a7e635a412")
+  input, err := base64.StdEncoding.DecodeString(line)
+  fmt.Printf("Decoded: %s\n", input)
+  fmt.Printf("Decoded: %v\n", []byte(input))
+  for i := 0; i < len(input); i++ {
+    fmt.Printf("%x ", input[i])
+  }
+  println()
+  fmt.Printf("%s\n", hex.Dump([]byte(input)))
   // Find key size
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
   fmt.Printf("Likely key size: %d\n", keysize)
@@ -34,7 +54,7 @@ func main() {
     key += string(solveSingleXOR([]byte(tb[i])))
   }
   // Print likely key
-  fmt.Printf("key: %v\n", []byte(key))
+  fmt.Printf("key: %v (%s)\n", []byte(key), key)
 }
 func findKeySize(min int, max int, c []byte) int {
   lowHam := 1000
