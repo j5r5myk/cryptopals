@@ -5,6 +5,7 @@ import (
   "encoding/hex"
   "os"
   "bufio"
+  "io/ioutil"
   "encoding/base64"
 )
 
@@ -24,18 +25,19 @@ func main() {
   fmt.Println(line)
   // Convert from b64
   //input := []byte("ae00ff1235889901fee11247981275981725987febc7ca7a7c7a8c79a87ca8fe8b9c0a7e635a412")
-  input, err := base64.StdEncoding.DecodeString(line)
-  fmt.Printf("Decoded: %s\n", input)
-  fmt.Printf("Decoded: %v\n", []byte(input))
-  for i := 0; i < len(input); i++ {
-    fmt.Printf("%x ", input[i])
+  lineD, err := base64.StdEncoding.DecodeString(line)
+  fmt.Printf("Decoded: %s\n", lineD)
+  fmt.Printf("Decoded: %v\n", []byte(lineD))
+  for i := 0; i < len(lineD); i++ {
+    fmt.Printf("%x ", lineD[i])
   }
   println()
-  fmt.Printf("%s\n", hex.Dump([]byte(input)))
+  fmt.Printf("%s\n", hex.Dump([]byte(lineD)))
   // Find key size
-  keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
+  keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, lineD)
   fmt.Printf("Likely key size: %d\n", keysize)
-  // Read in the rest of the file
+  // Read whole file into memory
+  input, err := ioutil.ReadFile("6.txt")
   // Divide input into keySized blocks
   blocks := createBlocks(input, keysize)
   tb := transposeBlocks(blocks, keysize)
@@ -55,6 +57,11 @@ func main() {
   }
   // Print likely key
   fmt.Printf("key: %v (%s)\n", []byte(key), key)
+  // Then actually decrypt it... 
+  scanner = bufio.NewScanner(file)
+  for scanner.Scan() {
+    decodeSingleXOR(key, scanner.Text())
+  }
 }
 func findKeySize(min int, max int, c []byte) int {
   lowHam := 1000
@@ -152,4 +159,11 @@ func calcScore(s []byte, freq map[byte]int) int {
     score += freq[char]
   }
   return score
+}
+func decodeSingleXOR(key string, line string) []byte {
+  result := make([]byte, len(line))
+  for i := 0; i < len(line); i++ {
+    result[i] = line[i] ^ key[i%len(key)]
+  }
+  return result
 }
