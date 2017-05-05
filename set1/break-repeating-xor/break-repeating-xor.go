@@ -116,7 +116,7 @@ func solveSingleXOR(input []byte) int {
       copy(hiholder, decoded)
     }
   }
-  fmt.Printf("Winner:\nChar: %d Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
+  fmt.Printf("Winner:\nChar: %s (%d) Score: %d\n%s", string(hichar), hichar, hiscore, hex.Dump(hiholder))
   return hichar
 }
 func decode(b byte, input []byte) []byte {
