@@ -9,12 +9,13 @@ import (
 func main() {
   MIN_KEYSIZE := 2
   MAX_KEYSIZE := 40
-  // Read input
-  // convert from b64
-  input := []byte("ae00ff1235889901fee1")
+  // Read 1 line of input
+  // Convert from b64
+  input := []byte("ae00ff1235889901fee11247981275981725987febc7ca7a7c7a8c79a87ca8fe8b9c0a7e635a412")
   // Find key size
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, input)
   fmt.Printf("Likely key size: %d\n", keysize)
+  // Read in the rest of the file
   // Divide input into keySized blocks
   blocks := createBlocks(input, keysize)
   tb := transposeBlocks(blocks, keysize)
@@ -30,7 +31,7 @@ func main() {
   key := ""
   // Single XOR tranposed blocks
   for i := 0; i < keysize; i++ {
-    key += string(singleXOR([]byte(tb[i])))
+    key += string(solveSingleXOR([]byte(tb[i])))
   }
   // Print likely key
   fmt.Printf("key: %v\n", []byte(key))
@@ -93,7 +94,7 @@ func transposeBlocks(blocks [][]byte, keysize int) []string {
   }
   return tb
 }
-func singleXOR(input []byte) int {
+func solveSingleXOR(input []byte) int {
   reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
   hiscore := 0
   hichar := 0
