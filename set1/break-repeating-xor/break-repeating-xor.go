@@ -37,7 +37,8 @@ func main() {
   keysize := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, lineD)
   fmt.Printf("Likely key size: %d\n", keysize)
   // Read whole file into memory
-  input, err := ioutil.ReadFile("6.txt")
+  input, _ := ioutil.ReadFile("6-nonl.txt")
+  // Strip newlines
   // B64 decode the file
   inputD, err := base64.StdEncoding.DecodeString(string(input))
   // Divide input into keySized blocks
@@ -118,6 +119,7 @@ func createBlocks(c []byte, keysize int) [][]byte{
   blocks[len(blocks) - 1] = c
   return blocks
 }
+// Needs to ignore newlines
 func transposeBlocks(blocks [][]byte, keysize int) []string {
   tb := make([]string, keysize)
   for i := 0; i < len(blocks); i++ {
