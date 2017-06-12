@@ -26,8 +26,8 @@ func main() {
   // Convert from b64
   //input := []byte("ae00ff1235889901fee11247981275981725987febc7ca7a7c7a8c79a87ca8fe8b9c0a7e635a412")
   lineD, err := base64.StdEncoding.DecodeString(line)
-  fmt.Printf("Decoded: %s\n", lineD)
-  fmt.Printf("Decoded: %v\n", []byte(lineD))
+  fmt.Printf("Decoded text: %s\n", lineD)
+  fmt.Printf("Decoded bytes: %v\n", []byte(lineD))
   for i := 0; i < len(lineD); i++ {
     fmt.Printf("%x ", lineD[i])
   }
@@ -47,11 +47,11 @@ func main() {
   // Print blocks
   println("Blocks:")
   for pos, block := range blocks {
-    fmt.Printf("%d: %s\n", pos, block)
+    fmt.Printf("%d: %v\n", pos, block)
   }
   println("Transposed:")
   for pos, tblock := range tb {
-    fmt.Printf("%d: %s\n", pos, tblock)
+    fmt.Printf("%d: %v\n", pos, tblock)
   }
   key := ""
   // Single XOR tranposed blocks
@@ -61,15 +61,16 @@ func main() {
   // Print likely key
   fmt.Printf("key: %v (%s)\n", []byte(key), key)
   // Then actually decrypt it... 
-  file, err = os.Open("6.txt")
-  defer file.Close()
-  scanner = bufio.NewScanner(file)
+  //file, err = os.Open("6.txt")
+  //defer file.Close()
+  //scanner = bufio.NewScanner(file)
   println("Results:")
-  for scanner.Scan() {
-    lineD, err = base64.StdEncoding.DecodeString(scanner.Text())
-    fmt.Printf("%s\b\n", decodeSingleXOR(key, string(lineD)))
+  //for scanner.Scan() {
+    //lineD, err = base64.StdEncoding.DecodeString(scanner.Text())
+    //fmt.Printf("%s\n", decodeSingleXOR(key, string(lineD)))
     //println(scanner.Text())
-  }
+  //}
+  fmt.Printf("%s\n", decodeSingleXOR(key, string(lineD)))
 }
 func findKeySize(min int, max int, c []byte) int {
   lowHam := 1000
