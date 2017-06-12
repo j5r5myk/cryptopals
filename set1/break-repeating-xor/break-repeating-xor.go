@@ -38,8 +38,10 @@ func main() {
   fmt.Printf("Likely key size: %d\n", keysize)
   // Read whole file into memory
   input, err := ioutil.ReadFile("6.txt")
+  // B64 decode the file
+  inputD, err := base64.StdEncoding.DecodeString(string(input))
   // Divide input into keySized blocks
-  blocks := createBlocks(input, keysize)
+  blocks := createBlocks(inputD, keysize)
   tb := transposeBlocks(blocks, keysize)
   // Print blocks
   println("Blocks:")
@@ -58,9 +60,14 @@ func main() {
   // Print likely key
   fmt.Printf("key: %v (%s)\n", []byte(key), key)
   // Then actually decrypt it... 
+  file, err = os.Open("6.txt")
+  defer file.Close()
   scanner = bufio.NewScanner(file)
+  println("Results:")
   for scanner.Scan() {
-    decodeSingleXOR(key, scanner.Text())
+    lineD, err = base64.StdEncoding.DecodeString(scanner.Text())
+    fmt.Printf("%s\b\n", decodeSingleXOR(key, string(lineD)))
+    //println(scanner.Text())
   }
 }
 func findKeySize(min int, max int, c []byte) int {
