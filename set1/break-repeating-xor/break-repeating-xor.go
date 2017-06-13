@@ -35,7 +35,8 @@ func main() {
   fmt.Printf("%s\n", hex.Dump([]byte(lineD)))
   // Find key size
   keyGuesses := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, lineD)
-  keysize := keyGuesses[0]
+  keyGuesses := [5, 3, 2]
+  keysize := keyGuesses[2]
   fmt.Printf("Likely key sizes: %v\n", keyGuesses)
   // Read whole file into memory
   input, _ := ioutil.ReadFile("6-nonl.txt")
@@ -52,13 +53,12 @@ func main() {
   // Print likely key
   fmt.Printf("key: %v (%s)\n", []byte(key), key)
 
-  // Decrypt file
+  /* Decrypt file */
   // Reopen file
   file, err = os.Open("6.txt")
   defer file.Close()
   scanner = bufio.NewScanner(file)
   println("Results:")
-  /*
   for scanner.Scan() {
     // Decode a line
     lineD, err = base64.StdEncoding.DecodeString(scanner.Text())
@@ -67,7 +67,6 @@ func main() {
     //println(scanner.Text())
   }
   //fmt.Printf("%s\n", decodeSingleXOR(key, string(lineD)))
-  */
 }
 func findKeySize(min int, max int, c []byte) []int {
   lowHam := 1000
@@ -84,8 +83,10 @@ func findKeySize(min int, max int, c []byte) []int {
   */
   for i := min; i <= max; i++ {
     fmt.Println("Testing keysize: ", i)
-    // Hamming distance b/w first 2 chunks
-    rawHam := calcHamming(c[0:i], c[i:2 * i])
+    // Hamming distance b/w first 4 chunks
+    fmt.Printf("%v %v %v %v\n", c[0:i], c[i:2*i], c[2*i:3*i], c[3*i:4*i])
+    //rawHam := calcHamming(c[0:i], c[i:2*i])
+    rawHam := calcHamming(c[0:i], c[i:2*i], c[2*i:3*i], c[3*i:4*i])
     // Normalize and compare
     normHam := rawHam / i
     println("normHam: ", normHam)
@@ -101,12 +102,12 @@ func findKeySize(min int, max int, c []byte) []int {
   result[2] = thirdBest
   return result
 }
-func calcHamming(str1 []byte, str2 []byte) int {
+func calcHamming(str1 []byte, str2 []byte, str3 []byte, str4 []byte) int {
   result := make([]byte, len(str1))
   hamming := 0
   // XOR each byte
   for i := 0; i < len(str1); i++ {
-    result[i] = str1[i] ^ str2[i]
+    result[i] = str1[i] ^ str2[i] ^ str3[i] ^ str4[i]
     // Count differing bytes
     for result[i] > 0 {
       hamming++
