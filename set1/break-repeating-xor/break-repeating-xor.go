@@ -2,10 +2,10 @@ package main
 
 import (
   "fmt"
-  "encoding/hex"
+  //"encoding/hex"
   "os"
   "bufio"
-  "io/ioutil"
+  //"io/ioutil"
   "encoding/base64"
 )
 
@@ -17,33 +17,19 @@ func main() {
   if err != nil {
     os.Exit(1)
   }
-  // Read 1 line for keysize calculations
   defer file.Close()
   scanner := bufio.NewScanner(file)
   scanner.Scan()
-  line := scanner.Text()
-  fmt.Println(line)
-  // Convert from b64
-  //input := []byte("ae00ff1235889901fee11247981275981725987febc7ca7a7c7a8c79a87ca8fe8b9c0a7e635a412")
-  lineD, err := base64.StdEncoding.DecodeString(line)
-  fmt.Printf("Decoded text: %s\n", lineD)
-  fmt.Printf("Decoded bytes: %v\n", []byte(lineD))
-  for i := 0; i < len(lineD); i++ {
-    fmt.Printf("%x ", lineD[i])
-  }
-  println()
-  fmt.Printf("%s\n", hex.Dump([]byte(lineD)))
+  input := scanner.Text()
+  fmt.Println(input)
+  // Decoded b64 input
+  inputDecoded, err := base64.StdEncoding.DecodeString(input)
   // Find key size
-  keyGuesses := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, lineD)
-  keyGuesses := [5, 3, 2]
-  keysize := keyGuesses[2]
+  keyGuesses := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, inputDecoded)
   fmt.Printf("Likely key sizes: %v\n", keyGuesses)
-  // Read whole file into memory
-  input, _ := ioutil.ReadFile("6-nonl.txt")
-  // B64 decode the file
-  inputD, err := base64.StdEncoding.DecodeString(string(input))
+  keysize := keyGuesses[1]
   // Divide input into keySized blocks
-  blocks := createBlocks(inputD, keysize)
+  blocks := createBlocks(inputDecoded, keysize)
   tb := transposeBlocks(blocks, keysize)
   key := ""
   // Single XOR tranposed blocks
@@ -53,19 +39,11 @@ func main() {
   // Print likely key
   fmt.Printf("key: %v (%s)\n", []byte(key), key)
 
-  /* Decrypt file */
-  // Reopen file
-  file, err = os.Open("6.txt")
-  defer file.Close()
-  scanner = bufio.NewScanner(file)
+  // Decrypt file
   println("Results:")
-  for scanner.Scan() {
-    // Decode a line
-    lineD, err = base64.StdEncoding.DecodeString(scanner.Text())
-    // Decrypt line with key and print
-    fmt.Printf("%s\n", decodeSingleXOR(key, string(lineD)))
-    //println(scanner.Text())
-  }
+  // Decrypt with key and print
+  fmt.Printf("%s\n", decodeSingleXOR(key, string(inputDecoded)))
+  //println(scanner.Text())
   //fmt.Printf("%s\n", decodeSingleXOR(key, string(lineD)))
 }
 func findKeySize(min int, max int, c []byte) []int {
@@ -84,13 +62,13 @@ func findKeySize(min int, max int, c []byte) []int {
   for i := min; i <= max; i++ {
     fmt.Println("Testing keysize: ", i)
     // Hamming distance b/w first 4 chunks
-    fmt.Printf("%v %v %v %v\n", c[0:i], c[i:2*i], c[2*i:3*i], c[3*i:4*i])
+    //fmt.Printf("%v %v\n", c[0:i], c[i:2*i])
     //rawHam := calcHamming(c[0:i], c[i:2*i])
     rawHam := calcHamming(c[0:i], c[i:2*i], c[2*i:3*i], c[3*i:4*i])
     // Normalize and compare
     normHam := rawHam / i
     println("normHam: ", normHam)
-    if normHam < lowHam {
+    if normHam <= lowHam {
       lowHam = normHam
       thirdBest = secondBest
       secondBest = bestSize
@@ -187,3 +165,4 @@ func decodeSingleXOR(key string, line string) []byte {
   }
   return result
 }
+
