@@ -29,14 +29,14 @@ func main() {
   fmt.Printf("%s\n", plaintext)
 }
 func decrypt(data, key []byte) []byte {
-    cipher, _ := aes.NewCipher([]byte(key))
-    plaintext := make([]byte, len(data))
-    println(len(data))
-    size := 16
+  cipher, _ := aes.NewCipher([]byte(key))
+  plaintext := make([]byte, len(data))
+  println(len(data))
+  size := 16
 
-    for bs, be := 0, size; bs < len(data); bs, be = bs+size, be+size {
-        cipher.Decrypt(plaintext[bs:be], data[bs:be])
-    }
+  for bs, be := 0, size; bs < len(data); bs, be = bs+size, be+size {
+    cipher.Decrypt(plaintext[bs:be], data[bs:be])
+  }
 
-    return plaintext
+  return plaintext
 }
