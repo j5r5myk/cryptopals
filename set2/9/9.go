@@ -10,7 +10,13 @@ import (
 )
 
 func main() {
-  padded := pad([]byte("YELLOW SUBMARINE"), 14)
+  fmt.Println("Welcome to PKSC#7 padding\nPlease enter a block:")
+  var input string
+  fmt.Scanln(&input)
+  fmt.Println("Please enter padding size:")
+  var size int
+  fmt.Scanln(&size)
+  padded := pad([]byte(input), size)
   fmt.Printf("Result: %s length: %d\n", string(padded), len(padded))
 }
 
