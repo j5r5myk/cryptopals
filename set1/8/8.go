@@ -1,3 +1,7 @@
+/* Cryptopals Challenge #8
+ * Detect AES in ECB mode
+ * Author: j5r5myk
+ */
 package main
 
 import (

@@ -1,3 +1,7 @@
+/* Cryptopals Challenge #1
+ * Convert hex to base64
+ * Author: j5r5myk
+ */
 package main
 
 import (

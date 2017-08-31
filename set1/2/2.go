@@ -1,3 +1,7 @@
+/* Cryptopals Challenge #2
+ * Fixed XOR
+ * Author: j5r5myk
+ */
 package main
 
 import (

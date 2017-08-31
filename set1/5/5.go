@@ -1,3 +1,7 @@
+/* Cryptopals Challenge #5
+ * Implement repeating-key XOR
+ * Author: j5r5myk
+ */
 package main
 
 import (

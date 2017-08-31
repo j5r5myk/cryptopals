@@ -1,6 +1,6 @@
 /* Cryptopals Challenge #9
  * Implement PKCS#7 padding
- * Author: j5r5myk@gmail.com
+ * Author: j5r5myk
  */
 package main
 

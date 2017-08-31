@@ -1,52 +1,40 @@
+/* Cryptopals Challenge #3
+ * Single-byte XOR cipher
+ * Author: j5r5myk
+ */
 package main
 
 import (
   "fmt"
   "encoding/hex"
   "strconv"
-  "bufio"
-  "os"
 )
 
 func main() {
-  /* Init vars */
-  var LINE_LENGTH int = 60
+  input := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
   reverseLetters := "zjqxkvbpgwyfmculdhrsnioate"
-  hiScore := 0
-  lineNum := 0
-  hiChar := ""
+  hiscore := 0
+  hichar := ""
   var score int
-  hiHolder := make([]byte, LINE_LENGTH / 2)
+  hiholder := make([]byte, len(input) / 2)
   // Create hashmap
   freq := make(map[byte]int)
   for pos, char := range reverseLetters {
     freq[byte(char)] = pos
   }
-  // Read line by line 
-  file, err := os.Open("./4.txt")
-  if err != nil {
-    fmt.Println(1, err)
-  }
-  defer file.Close()
-  scanner := bufio.NewScanner(file)
-  for scanner.Scan() {
-    // Parse pairs into bytes
-    bytes := parseHexString(scanner.Text())
-    for i := 0; i < 128; i++ {
-      // Decode using i and calculate frequency score
-      decoded := decode(byte(i), bytes)
-      score = calcScore(decoded, freq)
-      // Greedily compare to previous attempts
-      if score > hiScore {
-        hiScore = score
-        hiChar = string(i)
-        copy(hiHolder, decoded)
-      }
+  bytes := parseHexString(input)
+  for i := 0; i < 128; i++ {
+    // Decode using the given byte and calculate frequency score
+    decoded := decode(byte(i), bytes)
+    score = calcScore(decoded, freq)
+    // Greedily compare to previous attempts
+    if score > hiscore {
+      hiscore = score
+      hichar = string(i)
+      copy(hiholder, decoded)
     }
-    lineNum++
   }
-  fmt.Printf("Winner:\nLine #%d Char: %s Score: %d\n%s", lineNum, hiChar, hiScore, hex.Dump(hiHolder))
-  defer file.Close()
+  fmt.Printf("Winner:\nChar: %s Score: %d\n%s", hichar, hiscore, hex.Dump(hiholder))
 }
 func parseHexString(s string) []byte {
   output := make([]byte, len(s) / 2)

@@ -1,3 +1,7 @@
+/* Cryptopals Challenge #7
+ * AES in ECB mode
+ * Author: j5r5myk
+ */
 package main
 
 import (
@@ -33,7 +37,7 @@ func decrypt(data, key []byte) []byte {
   plaintext := make([]byte, len(data))
   println(len(data))
   size := 16
-
+  // I copied this from Stackoverflow and don't understand it
   for bs, be := 0, size; bs < len(data); bs, be = bs+size, be+size {
     cipher.Decrypt(plaintext[bs:be], data[bs:be])
   }
