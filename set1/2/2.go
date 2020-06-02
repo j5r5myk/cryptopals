@@ -28,6 +28,7 @@ func readLines() []int {
   // Remove newlines
   str1 = str1[:len(str1)-1]
   str2 = str2[:len(str2)-1]
+  // Do the operation
   result := make([]int, len(str1))
   for pos, char:= range str1 {
     i, err := strconv.ParseInt(string(char), 16, 0)
