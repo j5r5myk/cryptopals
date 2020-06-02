@@ -15,7 +15,7 @@ import (
 func main() {
     KEY := []byte("YELLOW SUBMARINE")
     // Open file
-    ciphertext, err := ioutil.ReadFile("7.txt")
+    ciphertext, err := ioutil.ReadFile("/Users/xje/go/src/cryptopals/input/7.txt")
     if err != nil {
       fmt.Print(err)
     }
