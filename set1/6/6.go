@@ -9,7 +9,7 @@ import (
     //"encoding/hex"
     "os"
     "bufio"
-    //"io/ioutil"
+    "io/ioutil"
     "encoding/base64"
 )
 
@@ -17,9 +17,16 @@ func main() {
     MIN_KEYSIZE := 2
     MAX_KEYSIZE := 40
     // Open file
+    if len(os.Args) < 2 {
+        fmt.Println("Usage: 6 <path-to-ciphertext>")
+        os.Exit(0)
+    }
+    message, _ := ioutil.ReadFile(os.Args[1])
+    fmt.Printf("%s", message)
     file, err := os.Open("6-nonl.txt")
     if err != nil {
-      os.Exit(1)
+        fmt.Println(err)
+        os.Exit(1)
     }
     defer file.Close()
     scanner := bufio.NewScanner(file)
