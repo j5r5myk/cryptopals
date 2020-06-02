@@ -7,7 +7,6 @@ package main
 import (
     "fmt"
     "os"
-    //"bufio"
     "io/ioutil"
     "encoding/base64"
 )
@@ -15,26 +14,14 @@ import (
 func main() {
     MIN_KEYSIZE := 2
     MAX_KEYSIZE := 40
-    // Open file
+    // Open file from argument path
     if len(os.Args) < 2 {
         fmt.Println("Usage: 6 <path-to-ciphertext>")
         os.Exit(0)
     }
     message, _ := ioutil.ReadFile(os.Args[1])
     fmt.Printf("%s", message)
-    /*
-    file, err := os.Open("6-nonl.txt")
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    defer file.Close()
-    scanner := bufio.NewScanner(file)
-    scanner.Scan()
-    input := scanner.Text()
-    fmt.Println(input)
-    */
-    // Decoded b64 input
+    // Decode base64 input
     inputDecoded, _ := base64.StdEncoding.DecodeString(string(message))
     // Find key size
     // TODO: this doesn't really work
@@ -47,7 +34,7 @@ func main() {
     key := ""
     // Single XOR tranposed blocks
     for i := 0; i < keysize; i++ {
-      key += string(solveSingleXOR([]byte(tb[i])))
+        key += string(solveSingleXOR([]byte(tb[i])))
     }
     // Print likely key
     fmt.Printf("key: %v (%s)\n", []byte(key), key)
@@ -74,9 +61,9 @@ func findKeySize(min int, max int, c []byte) []int {
     */
     for i := min; i <= max; i++ {
       fmt.Println("Testing keysize: ", i)
-      // Hamming distance b/w first 4 chunks
       //fmt.Printf("%v %v\n", c[0:i], c[i:2*i])
       //rawHam := calculateHammingDistance(c[0:i], c[i:2*i])
+      // Hamming distance between first 4 chunks? TODO why?
       rawHam := calculateHammingDistance(c[0:i], c[i:2*i], c[2*i:3*i], c[3*i:4*i])
       // Normalize and compare
       normHam := rawHam / i
