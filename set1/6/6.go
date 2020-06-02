@@ -6,9 +6,8 @@ package main
 
 import (
     "fmt"
-    //"encoding/hex"
     "os"
-    "bufio"
+    //"bufio"
     "io/ioutil"
     "encoding/base64"
 )
@@ -23,6 +22,7 @@ func main() {
     }
     message, _ := ioutil.ReadFile(os.Args[1])
     fmt.Printf("%s", message)
+    /*
     file, err := os.Open("6-nonl.txt")
     if err != nil {
         fmt.Println(err)
@@ -33,8 +33,9 @@ func main() {
     scanner.Scan()
     input := scanner.Text()
     fmt.Println(input)
+    */
     // Decoded b64 input
-    inputDecoded, err := base64.StdEncoding.DecodeString(input)
+    inputDecoded, _ := base64.StdEncoding.DecodeString(string(message))
     // Find key size
     // TODO: this doesn't really work
     keyGuesses := findKeySize(MIN_KEYSIZE, MAX_KEYSIZE, inputDecoded)
