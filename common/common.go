@@ -21,8 +21,8 @@ func findKeySize(min int, max int, c []byte) []int {
     fmt.Println("Testing keysize: ", i)
     // Hamming distance b/w first 4 chunks
     //fmt.Printf("%v %v\n", c[0:i], c[i:2*i])
-    //rawHam := calcHamming(c[0:i], c[i:2*i])
-    rawHam := calcHamming(c[0:i], c[i:2*i])
+    //rawHam := calculateHammingDistance(c[0:i], c[i:2*i])
+    rawHam := calculateHammingDistance(c[0:i], c[i:2*i])
     // Normalize and compare
     normHam := rawHam / i
     println("normHam: ", normHam)
@@ -38,7 +38,7 @@ func findKeySize(min int, max int, c []byte) []int {
   result[2] = thirdBest
   return result
 }
-func calcHamming(str1 []byte, str2 []byte) int {
+func calculateHammingDistance(str1 []byte, str2 []byte) int {
   result := make([]byte, len(str1))
   hamming := 0
   // XOR each byte
@@ -80,6 +80,7 @@ func solveSingleXOR(input []byte) int {
 }
 */
 
+// XOR decode for breaking single XOR
 func decode(b byte, input []byte) []byte {
   result := make([]byte, len(input))
   for i := 0; i < len(input); i++ {
